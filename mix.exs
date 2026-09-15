@@ -110,24 +110,24 @@ defmodule Beacon.LiveAdmin.MixProject do
     [
       setup: ["deps.get", "assets.setup"],
       dev: "run --no-halt dev.exs",
-      "format.all": ["format", "cmd npm run format"],
+      "format.all": ["format", "cmd bun run format"],
       "format.all.check": [
         "format --check-formatted",
-        "cmd npm run format-check"
+        "cmd bun run format-check"
       ],
       "assets.setup": [
         "tailwind.install --if-missing --no-assets",
-        "cmd npm install",
-        "cmd npm install --prefix assets"
+        "cmd bun install --frozen-lockfile",
+        "cmd bun install --cwd assets --frozen-lockfile"
       ],
       "assets.watch": [
         "tailwind beacon_live_admin",
-        "cmd --cd assets node build.js --watch"
+        "cmd --cd assets bun build.js --watch"
       ],
       "assets.build": [
         "tailwind beacon_live_admin",
         "tailwind beacon_live_admin_min",
-        "cmd --cd assets node build.js --deploy"
+        "cmd --cd assets bun build.js --deploy"
       ]
     ]
   end

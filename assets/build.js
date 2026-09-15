@@ -92,6 +92,11 @@ if (watch) {
     .then((ctx) => ctx.watch())
     .catch((_error) => process.exit(1))
 } else {
-  esbuild.build(optsClient)
-  esbuild.build(optsServer)
+  const builds = [esbuild.build(optsClient), esbuild.build(optsServer)]
+  // The controller serves the unminified bundle in development. Keep both
+  // variants on the same dependencies when producing distributable assets.
+  if (deploy) {
+    builds.push(esbuild.build({ ...optsClient, minify: false, outfile: "../priv/static/beacon_live_admin.js" }))
+  }
+  Promise.all(builds).catch(() => process.exit(1))
 }

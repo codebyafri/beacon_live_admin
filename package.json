@@ -8,21 +8,22 @@
     "url": "git://github.com/BeaconCMS/beacon_live_admin.git"
   },
   "devDependencies": {
-    "eslint": "^9",
-    "eslint-config-prettier": "^10",
-    "prettier": "^3",
-    "prettier-plugin-svelte": "^3",
-    "@playwright/test": "^1.51",
-    "@types/node": "^22"
+    "eslint": "^9.39.5",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.6",
+    "prettier-plugin-svelte": "^3.5.2",
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^22.20.2"
   },
   "scripts": {
     "format": "prettier --write .",
     "format-check": "prettier --check .",
-    "setup": "mix deps.get && npm install && cd assets && npm install",
-    "e2e:setup": "cd test/e2e && npx playwright install --with-deps",
+    "setup": "mix deps.get && bun install && cd assets && bun install",
+    "e2e:setup": "cd test/e2e && bunx --bun playwright install --with-deps",
     "e2e:server": "MIX_ENV=e2e mix test e2e test/e2e/test_helper.exs",
-    "e2e:test": "mix assets.build && cd test/e2e && npx playwright test",
-    "e2e:test:ui": "mix assets.build && cd test/e2e && npx playwright test --ui",
-    "e2e:test:debug": "mix assets.build && cd test/e2e && npx playwright test --debug"
-  }
+    "e2e:test": "mix assets.build && cd test/e2e && bunx --bun playwright test",
+    "e2e:test:ui": "mix assets.build && cd test/e2e && bunx --bun playwright test --ui",
+    "e2e:test:debug": "mix assets.build && cd test/e2e && bunx --bun playwright test --debug"
+  },
+  "packageManager": "bun@1.4.1"
 }
