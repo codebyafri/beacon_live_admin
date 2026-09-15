@@ -89,3 +89,16 @@ At DockYard we are [ready to help you build your next Elixir project](https://do
 We have a unique expertise in Elixir and Phoenix development that is unmatched and we love to [write about Elixir](https://dockyard.com/blog/categories/elixir).
 
 Have a project in mind? [Get in touch](https://dockyard.com/contact/hire-us)!
+
+### Request context in clustered integrations
+
+An optional `config :beacon_live_admin, :call_context, MyApp.AdminContext` module
+captures context with `capture(site)` in the caller and authorizes/invokes the
+operation with `call(site, module, function, arguments, context)` on the selected
+node. Install that module on all participating nodes. There is no fallback after
+rejection. Without this option, existing cluster calls are unchanged.
+
+`config :beacon_live_admin, :live_view_log, false` disables the LiveView debug
+logger for admin views. This is a compile-time option; its default is `:debug`,
+matching upstream. It is useful for authenticated integrations because LiveView
+mount logs include the session map even when request parameter filtering is set.

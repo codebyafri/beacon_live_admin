@@ -31,6 +31,7 @@ defmodule Beacon.LiveAdmin.Web do
   def live_view do
     quote do
       use Phoenix.LiveView,
+        log: Application.compile_env(:beacon_live_admin, :live_view_log, :debug),
         layout: {Beacon.LiveAdmin.Layouts, :app}
 
       if Code.ensure_loaded?(Mix.Project) and Mix.env() == :e2e do
