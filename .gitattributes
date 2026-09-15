@@ -1,0 +1,2 @@
+priv/static/*.js linguist-generated=true -whitespace
+priv/static/*.css linguist-generated=true

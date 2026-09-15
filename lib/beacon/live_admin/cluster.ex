@@ -1,6 +1,12 @@
 defmodule Beacon.LiveAdmin.Cluster do
   @moduledoc """
   Cluster management. Discover all sites running in the cluster and executes functions globally.
+
+  An optional `:beacon_live_admin, :call_context` module implements `capture(site)`
+  in the calling process and `call(site, module, function, arguments, context)` on
+  the selected node. The latter authorizes and invokes the operation. A rejected
+  context never falls back to an unguarded call. Install the module on every node.
+  Without the hook, behavior is unchanged.
   """
 
   @doc false
@@ -74,10 +80,19 @@ defmodule Beacon.LiveAdmin.Cluster do
   end
 
   defp do_call(site, node, mod, fun, args) do
-    :erpc.call(node, mod, fun, args)
+    case Application.get_env(:beacon_live_admin, :call_context) do
+      nil ->
+        :erpc.call(node, mod, fun, args)
+
+      hook ->
+        context = hook.capture(site)
+        :erpc.call(node, hook, :call, [site, mod, fun, args, context])
+    end
   rescue
     exception ->
-      Logger.debug("failed to call #{Exception.format_mfa(mod, fun, args)} for site #{inspect(site)} on node #{inspect(node)}")
+      Logger.debug(
+        "failed to call #{Exception.format_mfa(mod, fun, args)} for site #{inspect(site)} on node #{inspect(node)}"
+      )
 
       message = """
       failed to call #{Exception.format_mfa(mod, fun, args)} for site #{inspect(site)} on node #{inspect(node)}
